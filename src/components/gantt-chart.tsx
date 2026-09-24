@@ -26,7 +26,7 @@ export const GanttChart = ({ roles, since, until, countries, lang, t }: Props) =
     return { country, lanes, top };
   });
   const plotBottom = cursor;
-  const width = labelWidth + layout.plotWidth + layout.rightPad;
+  const width = labelWidth + layout.plotWidth + layout.endLabelWidth;
   const height = plotBottom + 8;
   const roleName = (role: Role) => t.get(role === "head_of_state" ? "headOfState" : "headOfGovernment");
 
@@ -74,18 +74,30 @@ export const GanttChart = ({ roles, since, until, countries, lang, t }: Props) =
               role="group"
               aria-label={both ? `${countryName} ${roleName(role)}` : countryName}
               data-from={country.display_from}
+              data-country={country.id}
             >
               {laneIndex === 0 && (
-                <text
-                  class="row-label"
-                  x={String(both ? layout.bothLabelWidth - 112 : labelWidth - 12)}
-                  y={String(top + (lanes.length * layout.rowHeight) / 2)}
-                  text-anchor="end"
-                  dominant-baseline="central"
-                  aria-hidden="true"
-                >
-                  {countryName}
-                </text>
+                <>
+                  <text
+                    class="row-label"
+                    x={String(both ? layout.bothLabelWidth - 112 : labelWidth - 12)}
+                    y={String(top + (lanes.length * layout.rowHeight) / 2)}
+                    text-anchor="end"
+                    dominant-baseline="central"
+                    aria-hidden="true"
+                  >
+                    {countryName}
+                  </text>
+                  <text
+                    class="row-label"
+                    x={String(labelWidth + layout.plotWidth + 12)}
+                    y={String(top + (lanes.length * layout.rowHeight) / 2)}
+                    dominant-baseline="central"
+                    aria-hidden="true"
+                  >
+                    {countryName}
+                  </text>
+                </>
               )}
               {both && (
                 <text

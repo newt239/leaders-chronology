@@ -122,7 +122,9 @@ const showDetail = (bar: SVGRectElement, focusNav?: "previous" | "next") => {
   document.querySelectorAll(".bar[aria-current]").forEach((el) => el.removeAttribute("aria-current"));
   document.querySelectorAll(".row.is-active").forEach((el) => el.classList.remove("is-active"));
   bar.setAttribute("aria-current", "true");
-  row.classList.add("is-active");
+  bar.closest("svg")?.querySelectorAll(`.row[data-country="${row.getAttribute("data-country")}"]`).forEach((lane) =>
+    lane.classList.add("is-active")
+  );
 
   const request = ++detailRequest;
   const fields: [string, string][] = [

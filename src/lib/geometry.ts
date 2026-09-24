@@ -8,10 +8,10 @@ export const layout = {
   barLabelSize: 13,
   bothLabelWidth: 230,
   countryGap: 10,
+  endLabelWidth: 140,
   labelWidth: 140,
   minBarWidth: 3,
   plotWidth: 1000,
-  rightPad: 24,
   rowHeight: 36,
 };
 
