@@ -6,7 +6,7 @@ import type { Role } from "#/types/leaders.ts";
 type Props = { roles: Role[]; minYear: number; maxYear: number; t: I18n };
 
 export const Filters = ({ roles, minYear, maxYear, t }: Props) => (
-  <details class="filters" data-filters hidden>
+  <details class="filters" data-filters>
     <summary>{t.get("filters")}</summary>
     <form class="filters-form" data-filters-form>
       <fieldset>

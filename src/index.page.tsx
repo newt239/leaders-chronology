@@ -11,9 +11,9 @@ import type { ClientData, Lang, Role } from "#/types/leaders.ts";
 const roles: Role[] = ["head_of_state", "head_of_government"];
 const minYear = Number(meta.period_start.slice(0, 4));
 const maxYear = Number(meta.as_of.slice(0, 4)) - 1;
-const siteUrl = Deno.env.get("SITE_URL");
+const siteUrl = "https://leaders-chronology.newt239.deno.net/";
 const years = { from: meta.period_start.slice(0, 4), to: meta.as_of.slice(0, 4) };
-const absolute = (path: string) => (siteUrl ? new URL(path, siteUrl).href : path);
+const absolute = (path: string) => new URL(path, siteUrl).href;
 
 const Page = ({ lang }: { lang: Lang }) => {
   const t = translator(lang);
@@ -38,7 +38,7 @@ const Page = ({ lang }: { lang: Lang }) => {
             acting: holder.acting,
             days: t.get(holder.end ? "days" : "daysSoFar", { days }),
             end: holder.end,
-            linkLabel: t.get(url?.startsWith(`https://${lang}.`) ? "onWikipedia" : "onWikipediaOther", { name }),
+            linkLabel: t.get("onWikipedia", { name }),
             name,
             office: lang === "ja" ? office.title_ja : office.title_en,
             portraitAlt: t.get("portrait", { name }),
@@ -78,7 +78,7 @@ const Page = ({ lang }: { lang: Lang }) => {
           <meta property="og:site_name" content={t.get("title")} />
           <meta property="og:title" content={t.get("title")} />
           <meta property="og:description" content={description} />
-          {siteUrl && <meta property="og:url" content={absolute(languages[lang].path)} />}
+          <meta property="og:url" content={absolute(languages[lang].path)} />
           <meta property="og:locale" content={lang === "ja" ? "ja_JP" : "en_US"} />
           <meta property="og:locale:alternate" content={lang === "ja" ? "en_US" : "ja_JP"} />
           <meta property="og:image" content={absolute(`/og/${lang}.png`)} />
@@ -89,14 +89,16 @@ const Page = ({ lang }: { lang: Lang }) => {
           <meta name="twitter:card" content="summary_large_image" />
           <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
           <link rel="stylesheet" href="/styles.css" />
-          {siteUrl && (
-            <>
-              <link rel="alternate" hreflang="en" href={absolute(languages.en.path)} />
-              <link rel="alternate" hreflang="ja" href={absolute(languages.ja.path)} />
-              <link rel="alternate" hreflang="x-default" href={absolute(languages.en.path)} />
-            </>
-          )}
+          <link rel="alternate" hreflang="en" href={absolute(languages.en.path)} />
+          <link rel="alternate" hreflang="ja" href={absolute(languages.ja.path)} />
+          <link rel="alternate" hreflang="x-default" href={absolute(languages.en.path)} />
           <title>{t.get("title")}</title>
+          <script
+            dangerouslySetInnerHTML={{
+              __html:
+                'document.documentElement.dataset.js="";if(new URLSearchParams(location.search).get("office")==="government")document.documentElement.dataset.office="government";',
+            }}
+          />
         </head>
         <body>
           <header class="page-header">
@@ -117,13 +119,12 @@ const Page = ({ lang }: { lang: Lang }) => {
                 <h2 id={`heading-${role}`}>
                   {t.get(role === "head_of_state" ? "headOfState" : "headOfGovernment")}
                 </h2>
+                <Legend t={t} />
                 <div class="chart-scroll">
                   <GanttChart role={role} year={minYear} countries={sorted} lang={lang} t={t} />
                 </div>
               </section>
             ))}
-
-            <Legend t={t} />
 
             <section class="detail" aria-label={t.get("selectedTerm")} aria-live="polite" data-detail></section>
           </main>
@@ -135,7 +136,7 @@ const Page = ({ lang }: { lang: Lang }) => {
             id="client-data"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(clientData).replaceAll("<", "\\u003c") }}
           />
-          <script type="module" src="/scripts/chart.js"></script>
+          <script src="/scripts/chart.js"></script>
         </body>
       </html>
     </>

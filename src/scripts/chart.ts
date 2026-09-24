@@ -8,7 +8,6 @@ const NAV_KEYS = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight", "End", "Hom
 
 const data: ClientData = JSON.parse(document.querySelector("#client-data")?.textContent ?? "{}");
 const detail = document.querySelector<HTMLElement>("[data-detail]");
-const filters = document.querySelector<HTMLDetailsElement>("[data-filters]");
 const form = document.querySelector<HTMLFormElement>("[data-filters-form]");
 const sinceInput = document.querySelector<HTMLInputElement>("[data-since-input]");
 const sinceOutput = document.querySelector<HTMLOutputElement>("[data-since-output]");
@@ -69,8 +68,9 @@ const showDetail = (bar: SVGRectElement, focusNav?: "previous" | "next") => {
 
   const figure = document.createElement("figure");
   figure.className = "portrait";
-  figure.hidden = true;
+  figure.hidden = !holder.url;
   const body = document.createElement("div");
+  body.className = "detail-body";
   const name = document.createElement("p");
   name.className = "detail-name";
   name.textContent = holder.name;
@@ -101,15 +101,20 @@ const showDetail = (bar: SVGRectElement, focusNav?: "previous" | "next") => {
         .catch(() => null);
     portraits.set(holder.url, portrait);
     portrait.then((source) => {
-      if (!source || request !== detailRequest) {
+      if (request !== detailRequest) {
+        return;
+      }
+      if (!source) {
+        figure.hidden = true;
         return;
       }
       const img = document.createElement("img");
       img.src = source;
       img.alt = holder.portraitAlt;
+      img.width = 120;
+      img.height = 150;
       img.decoding = "async";
       figure.append(img);
-      figure.hidden = false;
     });
   }
 
@@ -133,9 +138,7 @@ const showDetail = (bar: SVGRectElement, focusNav?: "previous" | "next") => {
     });
     nav.append(button);
   }
-  body.append(nav);
-
-  detail.replaceChildren(figure, body);
+  detail.replaceChildren(figure, body, nav);
   if (focusNav) {
     const buttons = nav.querySelectorAll("button");
     const preferred = buttons[focusNav === "previous" ? 0 : 1];
@@ -182,9 +185,7 @@ const onKeydown = (event: KeyboardEvent) => {
 
 const apply = () => {
   const scale = createScale(state.since, data.periodStart, data.asOf);
-  document.querySelectorAll<HTMLElement>("[data-role-block]").forEach((block) => {
-    block.hidden = block.dataset.roleBlock !== state.office;
-  });
+  document.documentElement.dataset.office = state.office;
 
   document.querySelectorAll<SVGSVGElement>("svg.chart").forEach((chart) => {
     const top = Number(chart.dataset.plotTop);
@@ -281,5 +282,4 @@ addEventListener("popstate", () => {
   apply();
 });
 
-filters?.removeAttribute("hidden");
 apply();

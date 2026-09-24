@@ -33,6 +33,12 @@
   display: none !important;
 }
 
+html:not([data-js]) .filters,
+html[data-js]:not([data-office="government"]) [data-role-block="government"],
+html[data-office="government"] [data-role-block="state"] {
+  display: none;
+}
+
 body {
   min-width: 320px;
   margin: 0;
@@ -68,7 +74,6 @@ h1 {
   margin: 0;
   font-size: 2.4rem;
   font-weight: 400;
-  letter-spacing: 0.01em;
   line-height: 1.15;
 }
 
@@ -99,7 +104,6 @@ h2 {
   font-size: 1.15rem;
   font-weight: 400;
   font-variant: small-caps;
-  letter-spacing: 0.08em;
 }
 
 a {
@@ -119,6 +123,7 @@ a:hover {
 
 button {
   min-width: 44px;
+  white-space: nowrap;
   min-height: 44px;
   padding: 8px 20px;
   border: 2px solid var(--ink);
@@ -126,7 +131,6 @@ button {
   background: var(--ink);
   color: var(--paper);
   font: inherit;
-  letter-spacing: 0.04em;
   cursor: pointer;
 }
 
@@ -164,7 +168,6 @@ button:disabled {
   padding: 12px 20px;
   border-radius: 8px;
   font-variant: small-caps;
-  letter-spacing: 0.08em;
   list-style: none;
   cursor: pointer;
 }
@@ -211,7 +214,6 @@ legend,
   padding: 0;
   color: var(--muted);
   font-variant: small-caps;
-  letter-spacing: 0.08em;
 }
 
 .choice {
@@ -395,7 +397,7 @@ legend,
   display: flex;
   flex-wrap: wrap;
   gap: 8px 28px;
-  margin: 16px 0 0;
+  margin: 0 0 12px;
   padding: 0;
   color: var(--muted);
   font-size: 0.95rem;
@@ -430,6 +432,7 @@ legend,
 
 .detail {
   display: flex;
+  flex-wrap: wrap;
   gap: 24px;
   align-items: flex-start;
   margin-top: 32px;
@@ -441,7 +444,7 @@ legend,
   padding: 24px;
 }
 
-.detail > div {
+.detail-body {
   flex: 1;
   min-width: 0;
 }
@@ -449,7 +452,11 @@ legend,
 .portrait {
   flex: none;
   width: 120px;
+  height: 150px;
   margin: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--surface-hover);
 }
 
 .portrait img {
@@ -477,7 +484,6 @@ legend,
 .detail dt {
   color: var(--muted);
   font-variant: small-caps;
-  letter-spacing: 0.08em;
 }
 
 .detail dd,
@@ -493,10 +499,9 @@ legend,
 
 .detail-nav {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  flex-basis: 100%;
+  justify-content: space-between;
   gap: 12px;
-  margin-top: 16px;
 }
 
 .page-footer {
@@ -535,27 +540,44 @@ legend,
     font-size: 2rem;
   }
 
+  html:has(.detail:not(:empty)) {
+    scroll-padding-bottom: 50vh;
+  }
+
   .detail {
-    flex-wrap: wrap;
+    gap: 16px;
   }
 
   .detail:not(:empty) {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    max-height: 50vh;
     padding: 16px;
+    overflow-y: auto;
+    border: 2px solid var(--ink);
+    border-bottom: 0;
+    border-radius: 8px 8px 0 0;
   }
 
   .portrait,
   .portrait img {
-    width: 96px;
-    height: 120px;
+    width: 72px;
+    height: 90px;
+  }
+
+  .detail-name {
+    margin-bottom: 8px;
+    font-size: 1.25rem;
   }
 
   .detail dl {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
+    gap: 0 12px;
+    font-size: 0.9rem;
   }
 
-  .detail dd {
-    margin-bottom: 8px;
+  .detail dt {
+    font-size: 0.8rem;
   }
 }
 
