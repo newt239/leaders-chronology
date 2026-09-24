@@ -152,13 +152,7 @@ const showDetail = (bar: SVGRectElement, focusNav?: "previous" | "next") => {
     });
     nav.append(button);
   }
-  const close = document.createElement("button");
-  close.type = "button";
-  close.className = "secondary detail-close";
-  close.textContent = data.labels.close;
-  close.addEventListener("click", clearDetail);
-
-  detail.replaceChildren(close, figure, body, nav);
+  detail.replaceChildren(figure, body, nav);
   document.documentElement.style.setProperty("--detail-height", `${detail.offsetHeight}px`);
   bar.scrollIntoView({ block: "nearest", inline: "nearest" });
   if (focusNav) {

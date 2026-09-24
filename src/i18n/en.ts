@@ -4,7 +4,6 @@ export const en = {
   asOf: "As of ${date}",
   barLabel: "${country}, ${name}, ${start} to ${end}",
   barLabelActing: "${country}, ${name}, acting, ${start} to ${end}",
-  close: "Close",
   days: "${days} days",
   daysInOffice: "Days in office",
   daysSoFar: "${days} days so far",

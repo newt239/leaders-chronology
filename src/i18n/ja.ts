@@ -6,7 +6,6 @@ export const ja: Messages = {
   asOf: "${date}時点",
   barLabel: "${country} ${name}、${start}から${end}まで",
   barLabelActing: "${country} ${name}・代行、${start}から${end}まで",
-  close: "閉じる",
   days: "${days}日",
   daysInOffice: "在任日数",
   daysSoFar: "${days}日・在任中",

@@ -455,12 +455,6 @@ legend,
   border-radius: 8px;
 }
 
-.detail-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-}
-
 .detail-body {
   flex: 1;
   min-width: 0;
@@ -487,7 +481,6 @@ legend,
 
 .detail-name {
   margin: 0 0 12px;
-  padding-inline-end: 96px;
   font-size: 1.6rem;
   line-height: 1.2;
 }
@@ -564,11 +557,6 @@ legend,
 
   .detail:not(:empty) {
     padding: 16px;
-  }
-
-  .detail-close {
-    top: 8px;
-    right: 8px;
   }
 
   .portrait,
