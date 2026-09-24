@@ -10,6 +10,7 @@ const NAV_KEYS = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight", "End", "Hom
 const data: ClientData = JSON.parse(document.querySelector("#client-data")?.textContent ?? "{}");
 const detail = document.querySelector<HTMLElement>("[data-detail]");
 const form = document.querySelector<HTMLFormElement>("[data-filters-form]");
+const applyButton = form?.querySelector<HTMLButtonElement>("button[type='submit']");
 const sinceInput = document.querySelector<HTMLInputElement>("[data-since-input]");
 const sinceOutput = document.querySelector<HTMLOutputElement>("[data-since-output]");
 const untilInput = document.querySelector<HTMLInputElement>("[data-until-input]");
@@ -18,6 +19,16 @@ const languageLink = document.querySelector<HTMLAnchorElement>("[data-language-l
 const minYear = Number(data.periodStart.slice(0, 4));
 const portraits = new Map<string, Promise<string | null>>();
 let detailRequest = 0;
+let appliedForm = "";
+
+const formSnapshot = () =>
+  form ? new URLSearchParams([...new FormData(form)].map(([key, value]) => [key, String(value)])).toString() : "";
+
+const syncApplyButton = () => {
+  if (applyButton) {
+    applyButton.disabled = formSnapshot() === appliedForm;
+  }
+};
 
 const tooltip = document.createElement("div");
 tooltip.className = "bar-tooltip";
@@ -317,6 +328,8 @@ const apply = () => {
   if (languageLink) {
     languageLink.search = location.search;
   }
+  appliedForm = formSnapshot();
+  syncApplyButton();
 };
 
 form?.addEventListener("submit", (event) => {
@@ -350,6 +363,8 @@ sinceInput?.addEventListener("input", () => {
   sinceInput.value = String(Math.min(Number(sinceInput.value), Number(untilInput.value) - 5));
   sinceOutput.value = sinceInput.value;
 });
+
+form?.addEventListener("input", syncApplyButton);
 
 untilInput?.addEventListener("input", () => {
   if (!sinceInput || !untilOutput) {

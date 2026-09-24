@@ -159,7 +159,8 @@ button.secondary:hover {
   background: var(--surface-hover);
 }
 
-button:disabled {
+button:disabled,
+button:disabled:hover {
   border-color: var(--tone-b);
   background: transparent;
   color: var(--muted);
