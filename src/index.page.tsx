@@ -55,6 +55,7 @@ const Page = ({ lang }: { lang: Lang }) => {
     ),
     labels: {
       acting: t.get("acting"),
+      close: t.get("close"),
       daysInOffice: t.get("daysInOffice"),
       nextTerm: t.get("nextTerm"),
       office: t.get("office"),

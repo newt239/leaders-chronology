@@ -33,6 +33,10 @@
   display: none !important;
 }
 
+html {
+  scroll-padding-bottom: calc(var(--detail-height, 0px) + 16px);
+}
+
 html:not([data-js]) .filters,
 html[data-js]:not([data-office="government"]) [data-role-block="government"],
 html[data-office="government"] [data-role-block="state"] {
@@ -441,7 +445,21 @@ legend,
 }
 
 .detail:not(:empty) {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  max-height: 50vh;
   padding: 24px;
+  overflow-y: auto;
+  border: 2px solid var(--ink);
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+}
+
+.detail-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
 }
 
 .detail-body {
@@ -470,6 +488,7 @@ legend,
 
 .detail-name {
   margin: 0 0 12px;
+  padding-inline-end: 96px;
   font-size: 1.6rem;
   line-height: 1.2;
 }
@@ -540,24 +559,17 @@ legend,
     font-size: 2rem;
   }
 
-  html:has(.detail:not(:empty)) {
-    scroll-padding-bottom: 50vh;
-  }
-
   .detail {
     gap: 16px;
   }
 
   .detail:not(:empty) {
-    position: sticky;
-    bottom: 0;
-    z-index: 1;
-    max-height: 50vh;
     padding: 16px;
-    overflow-y: auto;
-    border: 2px solid var(--ink);
-    border-bottom: 0;
-    border-radius: 8px 8px 0 0;
+  }
+
+  .detail-close {
+    top: 8px;
+    right: 8px;
   }
 
   .portrait,

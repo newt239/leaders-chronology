@@ -45,6 +45,9 @@ export type HolderDetail = {
 export type ClientData = {
   asOf: string;
   periodStart: string;
-  labels: Record<"acting" | "daysInOffice" | "nextTerm" | "office" | "previousTerm" | "status" | "term", string>;
+  labels: Record<
+    "acting" | "close" | "daysInOffice" | "nextTerm" | "office" | "previousTerm" | "status" | "term",
+    string
+  >;
   holders: HolderDetail[];
 };

@@ -45,6 +45,20 @@ const moveFocusTarget = (target: SVGRectElement) => {
   target.setAttribute("tabindex", "0");
 };
 
+const clearDetail = () => {
+  const current = document.querySelector<SVGRectElement>(".bar[aria-current]");
+  const hadFocus = detail?.contains(document.activeElement) ?? false;
+  current?.removeAttribute("aria-current");
+  document.querySelectorAll(".row.is-active").forEach((el) => el.classList.remove("is-active"));
+  detail?.replaceChildren();
+  document.documentElement.style.removeProperty("--detail-height");
+  detailRequest++;
+  if (hadFocus && current) {
+    moveFocusTarget(current);
+    current.focus();
+  }
+};
+
 const showDetail = (bar: SVGRectElement, focusNav?: "previous" | "next") => {
   const holder = data.holders[Number(bar.dataset.holder)];
   const row = bar.closest(".row");
@@ -138,7 +152,15 @@ const showDetail = (bar: SVGRectElement, focusNav?: "previous" | "next") => {
     });
     nav.append(button);
   }
-  detail.replaceChildren(figure, body, nav);
+  const close = document.createElement("button");
+  close.type = "button";
+  close.className = "secondary detail-close";
+  close.textContent = data.labels.close;
+  close.addEventListener("click", clearDetail);
+
+  detail.replaceChildren(close, figure, body, nav);
+  document.documentElement.style.setProperty("--detail-height", `${detail.offsetHeight}px`);
+  bar.scrollIntoView({ block: "nearest", inline: "nearest" });
   if (focusNav) {
     const buttons = nav.querySelectorAll("button");
     const preferred = buttons[focusNav === "previous" ? 0 : 1];
@@ -154,7 +176,11 @@ const onKeydown = (event: KeyboardEvent) => {
   }
   if (event.key === "Enter" || event.key === " ") {
     event.preventDefault();
-    showDetail(bar);
+    if (bar.getAttribute("aria-current")) {
+      clearDetail();
+    } else {
+      showDetail(bar);
+    }
     return;
   }
   const row = bar.closest(".row");
@@ -271,10 +297,27 @@ sinceInput?.addEventListener("input", () => {
 document.querySelectorAll<SVGSVGElement>("svg.chart").forEach((chart) => {
   chart.addEventListener("keydown", onKeydown);
   chart.addEventListener("click", (event) => {
-    if (event.target instanceof SVGRectElement && event.target.classList.contains("bar")) {
+    if (!(event.target instanceof SVGRectElement) || !event.target.classList.contains("bar")) {
+      return;
+    }
+    if (event.target.getAttribute("aria-current")) {
+      clearDetail();
+    } else {
       showDetail(event.target);
     }
   });
+});
+
+addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && detail?.hasChildNodes()) {
+    clearDetail();
+  }
+});
+
+addEventListener("resize", () => {
+  if (detail?.hasChildNodes()) {
+    document.documentElement.style.setProperty("--detail-height", `${detail.offsetHeight}px`);
+  }
 });
 
 addEventListener("popstate", () => {
