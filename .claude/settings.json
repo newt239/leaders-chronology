@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(deno install:*)",
+      "Bash(deno task:*)",
+      "Bash(deno fmt:*)",
+      "Bash(deno lint:*)",
+      "Bash(grep:*)",
+      "Bash(gh pr create:*)"
+    ],
+    "deny": ["Bash(git reset:*)", "Bash(git merge:*)", "Bash(git rebase:*)", "Bash(deno deploy --prod:*)"],
+    "ask": [
+      "Bash(rm:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(deno deploy:*)"
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "imports": {
+    "#/": "./src/",
+    "@libs/i18n": "jsr:@libs/i18n@0.2.0",
+    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/",
+    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.15/jsx-runtime.ts"
+  },
+  "minimumDependencyAge": "P7D",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "lume",
+    "lib": [
+      "deno.ns",
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "types": [
+      "lume/types.ts"
+    ]
+  },
+  "tasks": {
+    "lume": "deno run --allow-read --allow-write --allow-env --allow-run --allow-ffi --allow-sys --allow-import=cdn.jsdelivr.net:443,jsr.io:443,deno.land:443,esm.sh:443 --allow-net=0.0.0.0,jsr.io:443,cdn.jsdelivr.net:443,data.jsdelivr.com:443,registry.npmjs.org:443 lume/cli.ts",
+    "build": "deno task lume",
+    "serve": "deno task lume -s",
+    "typecheck": "deno check _config.ts src/",
+    "lint": "deno lint",
+    "format": "deno fmt --check",
+    "format:fix": "deno fmt",
+    "codecheck": "deno task typecheck && deno task lint && deno task format"
+  },
+  "fmt": {
+    "lineWidth": 120,
+    "proseWrap": "preserve",
+    "exclude": [
+      "data/",
+      "_site/"
+    ]
+  },
+  "lint": {
+    "rules": {
+      "tags": [
+        "recommended"
+      ],
+      "exclude": [
+        "no-import-prefix"
+      ]
+    },
+    "plugins": [
+      "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/lint.ts"
+    ],
+    "exclude": [
+      "_site/"
+    ]
+  },
+  "unstable": [
+    "temporal",
+    "fmt-component"
+  ],
+  "deploy": {
+    "framework": "lume",
+    "install": "deno install",
+    "build": "deno task build",
+    "runtime": {
+      "type": "static",
+      "cwd": "./_site"
+    }
+  }
+}
