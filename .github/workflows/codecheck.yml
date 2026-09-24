@@ -1,0 +1,37 @@
+name: Codecheck
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  codecheck:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Deno
+        uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version-file: .tool-versions
+          cache: true
+      - name: Install dependencies
+        run: deno install --frozen
+      - name: Typecheck
+        run: deno task typecheck
+      - name: Lint
+        run: deno task lint
+      - name: Format
+        run: deno task format
+      - name: Build
+        run: deno task build
