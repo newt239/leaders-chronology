@@ -218,7 +218,7 @@ fieldset {
 }
 
 legend,
-.since label {
+.year-range label {
   margin-bottom: 4px;
   padding: 0;
   color: var(--muted);
@@ -246,19 +246,24 @@ legend,
   accent-color: var(--ink);
 }
 
-.since {
+.years {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px 40px;
+}
+
+.year-range {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 4px 16px;
-  max-width: 520px;
 }
 
-.since label {
+.year-range label {
   grid-column: 1 / -1;
 }
 
-.since input {
+.year-range input {
   width: 100%;
   min-width: 0;
   height: 44px;
@@ -268,19 +273,19 @@ legend,
   appearance: none;
 }
 
-.since input::-webkit-slider-runnable-track {
+.year-range input::-webkit-slider-runnable-track {
   height: 4px;
   border-radius: 2px;
   background: var(--muted);
 }
 
-.since input::-moz-range-track {
+.year-range input::-moz-range-track {
   height: 4px;
   border-radius: 2px;
   background: var(--muted);
 }
 
-.since input::-webkit-slider-thumb {
+.year-range input::-webkit-slider-thumb {
   width: 24px;
   height: 24px;
   margin-top: -10px;
@@ -291,7 +296,7 @@ legend,
   appearance: none;
 }
 
-.since input::-moz-range-thumb {
+.year-range input::-moz-range-thumb {
   width: 24px;
   height: 24px;
   border: 3px solid var(--paper);
@@ -300,17 +305,17 @@ legend,
   box-shadow: 0 0 0 1px var(--ink);
 }
 
-.since input:hover::-webkit-slider-thumb {
+.year-range input:hover::-webkit-slider-thumb {
   background: var(--accent);
   box-shadow: 0 0 0 1px var(--accent);
 }
 
-.since input:hover::-moz-range-thumb {
+.year-range input:hover::-moz-range-thumb {
   background: var(--accent);
   box-shadow: 0 0 0 1px var(--accent);
 }
 
-.since output {
+.year-range output {
   min-width: 3em;
   font-size: 1.1rem;
   font-variant-numeric: tabular-nums;
@@ -433,7 +438,7 @@ legend,
   display: flex;
   flex-wrap: wrap;
   gap: 8px 28px;
-  margin: 0 0 12px;
+  margin: 16px 0 0;
   padding: 0;
   color: var(--muted);
   font-size: 0.95rem;

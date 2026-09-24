@@ -36,4 +36,5 @@ export const ja: Messages = {
   term: "在任期間",
   termRange: "${start}〜${end}",
   title: "首脳在任年表",
+  until: "終了年",
 };

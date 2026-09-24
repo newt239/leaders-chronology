@@ -12,9 +12,10 @@ const detail = document.querySelector<HTMLElement>("[data-detail]");
 const form = document.querySelector<HTMLFormElement>("[data-filters-form]");
 const sinceInput = document.querySelector<HTMLInputElement>("[data-since-input]");
 const sinceOutput = document.querySelector<HTMLOutputElement>("[data-since-output]");
+const untilInput = document.querySelector<HTMLInputElement>("[data-until-input]");
+const untilOutput = document.querySelector<HTMLOutputElement>("[data-until-output]");
 const languageLink = document.querySelector<HTMLAnchorElement>("[data-language-link]");
 const minYear = Number(data.periodStart.slice(0, 4));
-const maxYear = Number(data.asOf.slice(0, 4)) - 1;
 const portraits = new Map<string, Promise<string | null>>();
 let detailRequest = 0;
 
@@ -53,16 +54,22 @@ const showTooltip = (bar: SVGRectElement) => {
   tooltip.style.top = `${Math.max(rect.top - tooltip.offsetHeight - 8, 8)}px`;
 };
 
-const parseSince = (value: string | null) => {
-  const year = value && /^\d{4}$/.test(value) ? Number(value) : minYear;
-  return Math.min(Math.max(year, minYear), maxYear);
+const parseYear = (
+  value: string | null,
+  fallback: number,
+) => (value && /^\d{4}$/.test(value) ? Number(value) : fallback);
+
+const parseYears = (sinceValue: string | null, untilValue: string | null) => {
+  const until = Math.min(Math.max(parseYear(untilValue, data.endYear), minYear + 1), data.endYear);
+  const since = Math.min(Math.max(parseYear(sinceValue, data.defaultSince), minYear), until - 1);
+  return { since, until };
 };
 
 const readState = () => {
   const params = new URLSearchParams(location.search);
   return {
     office: OFFICES.find((office) => office === params.get("office")) ?? "state",
-    since: parseSince(params.get("since")),
+    ...parseYears(params.get("since"), params.get("until")),
   };
 };
 
@@ -195,7 +202,7 @@ const showDetail = (bar: SVGRectElement, focusNav?: "previous" | "next") => {
     const buttons = nav.querySelectorAll("button");
     const preferred = buttons[focusNav === "previous" ? 0 : 1];
     const fallback = buttons[focusNav === "previous" ? 1 : 0];
-    (preferred && !preferred.disabled ? preferred : fallback)?.focus();
+    (preferred && !preferred.disabled ? preferred : fallback)?.focus({ preventScroll: true });
   }
 };
 
@@ -243,7 +250,7 @@ const apply = () => {
   document.documentElement.dataset.office = state.office;
 
   document.querySelectorAll<SVGSVGElement>("svg.chart").forEach((chart) => {
-    const scale = createScale(state.since, data.periodStart, data.asOf, Number(chart.dataset.labelWidth));
+    const scale = createScale(state.since, state.until, data.periodStart, data.asOf, Number(chart.dataset.labelWidth));
     const top = Number(chart.dataset.plotTop);
     const bottom = Number(chart.dataset.plotBottom);
     chart.querySelector("[data-axis]")?.replaceChildren(
@@ -301,9 +308,11 @@ const apply = () => {
   document.querySelectorAll<HTMLInputElement>("input[name='office']").forEach((radio) => {
     radio.checked = radio.value === state.office;
   });
-  if (sinceInput && sinceOutput) {
+  if (sinceInput && sinceOutput && untilInput && untilOutput) {
     sinceInput.value = String(state.since);
     sinceOutput.value = String(state.since);
+    untilInput.value = String(state.until === data.endYear ? untilInput.max : state.until);
+    untilOutput.value = String(state.until);
   }
   if (languageLink) {
     languageLink.search = location.search;
@@ -315,25 +324,39 @@ form?.addEventListener("submit", (event) => {
   const values = new FormData(form);
   state = {
     office: OFFICES.find((office) => office === values.get("office")) ?? "state",
-    since: parseSince(String(values.get("since"))),
+    ...parseYears(String(values.get("since")), String(values.get("until"))),
   };
   const url = new URL(location.href);
   url.searchParams.delete("office");
   url.searchParams.delete("since");
+  url.searchParams.delete("until");
   if (state.office !== "state") {
     url.searchParams.set("office", state.office);
   }
-  if (state.since !== minYear) {
+  if (state.since !== data.defaultSince) {
     url.searchParams.set("since", String(state.since));
+  }
+  if (state.until !== data.endYear) {
+    url.searchParams.set("until", String(state.until));
   }
   history.pushState(null, "", url);
   apply();
 });
 
 sinceInput?.addEventListener("input", () => {
-  if (sinceOutput) {
-    sinceOutput.value = sinceInput.value;
+  if (!untilInput || !sinceOutput) {
+    return;
   }
+  sinceInput.value = String(Math.min(Number(sinceInput.value), Number(untilInput.value) - 5));
+  sinceOutput.value = sinceInput.value;
+});
+
+untilInput?.addEventListener("input", () => {
+  if (!sinceInput || !untilOutput) {
+    return;
+  }
+  untilInput.value = String(Math.max(Number(untilInput.value), Number(sinceInput.value) + 5));
+  untilOutput.value = String(Math.min(Number(untilInput.value), data.endYear));
 });
 
 document.querySelectorAll<SVGSVGElement>("svg.chart").forEach((chart) => {

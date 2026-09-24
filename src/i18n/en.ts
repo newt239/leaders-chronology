@@ -34,6 +34,7 @@ export const en = {
   term: "Term",
   termRange: "${start} – ${end}",
   title: "Leaders Chronology",
+  until: "Until",
 };
 
 export type Messages = Record<keyof typeof en, string>;

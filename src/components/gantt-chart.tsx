@@ -5,12 +5,12 @@ import { meta } from "#/lib/leaders.ts";
 import type { I18n } from "@libs/i18n";
 import type { Country, Lang, Role } from "#/types/leaders.ts";
 
-type Props = { roles: Role[]; year: number; countries: Country[]; lang: Lang; t: I18n };
+type Props = { roles: Role[]; since: number; until: number; countries: Country[]; lang: Lang; t: I18n };
 
-export const GanttChart = ({ roles, year, countries, lang, t }: Props) => {
+export const GanttChart = ({ roles, since, until, countries, lang, t }: Props) => {
   const both = roles.length > 1;
   const labelWidth = both ? layout.bothLabelWidth : layout.labelWidth;
-  const scale = createScale(year, meta.period_start, meta.as_of, labelWidth);
+  const scale = createScale(since, until, meta.period_start, meta.as_of, labelWidth);
   const periodStart = toDay(meta.period_start);
   const plotTop = layout.axisHeight;
   const barOffset = (layout.rowHeight - layout.barHeight) / 2;
@@ -116,7 +116,7 @@ export const GanttChart = ({ roles, year, countries, lang, t }: Props) => {
                   x2={String(scale.xOf(founded))}
                   y1={String(y + 2)}
                   y2={String(y + layout.rowHeight - 2)}
-                  display={founded > scale.from ? undefined : "none"}
+                  display={founded > scale.from && founded <= scale.to ? undefined : "none"}
                   aria-hidden="true"
                   data-founded={country.display_from}
                 />

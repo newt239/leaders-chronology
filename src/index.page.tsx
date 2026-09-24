@@ -10,7 +10,8 @@ import type { ClientData, Lang, Role } from "#/types/leaders.ts";
 
 const roles: Role[] = ["head_of_state", "head_of_government"];
 const minYear = Number(meta.period_start.slice(0, 4));
-const maxYear = Number(meta.as_of.slice(0, 4)) - 1;
+const endYear = new Date().getUTCFullYear();
+const defaultSince = 2000;
 const siteUrl = "https://leaders-chronology.newt239.deno.net/";
 const years = { from: meta.period_start.slice(0, 4), to: meta.as_of.slice(0, 4) };
 const absolute = (path: string) => new URL(path, siteUrl).href;
@@ -24,6 +25,8 @@ const Page = ({ lang }: { lang: Lang }) => {
   );
   const clientData: ClientData = {
     asOf: meta.as_of,
+    defaultSince,
+    endYear,
     holders: countries.flatMap((country) =>
       country.offices.flatMap((office) =>
         office.holders.map((holder) => {
@@ -112,24 +115,30 @@ const Page = ({ lang }: { lang: Lang }) => {
           </header>
 
           <main>
-            <Filters roles={roles} minYear={minYear} maxYear={maxYear} t={t} />
+            <Filters roles={roles} minYear={minYear} endYear={endYear} since={defaultSince} t={t} />
+            <Legend t={t} />
 
             {roles.map((role) => (
               <section class="role-block" data-role-block={roleParam[role]} aria-labelledby={`heading-${role}`}>
                 <h2 id={`heading-${role}`}>
                   {t.get(role === "head_of_state" ? "headOfState" : "headOfGovernment")}
                 </h2>
-                <Legend t={t} />
                 <div class="chart-scroll">
-                  <GanttChart roles={[role]} year={minYear} countries={sorted} lang={lang} t={t} />
+                  <GanttChart
+                    roles={[role]}
+                    since={defaultSince}
+                    until={endYear}
+                    countries={sorted}
+                    lang={lang}
+                    t={t}
+                  />
                 </div>
               </section>
             ))}
             <section class="role-block" data-role-block="both" aria-labelledby="heading-both">
               <h2 id="heading-both">{t.get("bothOffices")}</h2>
-              <Legend t={t} />
               <div class="chart-scroll">
-                <GanttChart roles={roles} year={minYear} countries={sorted} lang={lang} t={t} />
+                <GanttChart roles={roles} since={defaultSince} until={endYear} countries={sorted} lang={lang} t={t} />
               </div>
             </section>
 

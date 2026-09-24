@@ -17,9 +17,15 @@ export const layout = {
 
 export type Scale = { from: number; to: number; xOf: (day: number) => number };
 
-export const createScale = (year: number, periodStart: string, asOf: string, labelWidth = layout.labelWidth): Scale => {
-  const from = Math.max(toDay(`${year}-01-01`), toDay(periodStart));
-  const to = toDay(asOf);
+export const createScale = (
+  since: number,
+  until: number,
+  periodStart: string,
+  asOf: string,
+  labelWidth = layout.labelWidth,
+): Scale => {
+  const from = Math.max(toDay(`${since}-01-01`), toDay(periodStart));
+  const to = Math.min(toDay(`${until + 1}-01-01`), toDay(asOf));
   const ratio = layout.plotWidth / (to - from);
   return { from, to, xOf: (day) => labelWidth + (day - from) * ratio };
 };
