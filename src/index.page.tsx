@@ -96,7 +96,7 @@ const Page = ({ lang }: { lang: Lang }) => {
           <script
             dangerouslySetInnerHTML={{
               __html:
-                'document.documentElement.dataset.js="";if(new URLSearchParams(location.search).get("office")==="government")document.documentElement.dataset.office="government";',
+                'document.documentElement.dataset.js="";var o=new URLSearchParams(location.search).get("office");if(o==="government"||o==="both")document.documentElement.dataset.office=o;',
             }}
           />
         </head>
@@ -121,10 +121,17 @@ const Page = ({ lang }: { lang: Lang }) => {
                 </h2>
                 <Legend t={t} />
                 <div class="chart-scroll">
-                  <GanttChart role={role} year={minYear} countries={sorted} lang={lang} t={t} />
+                  <GanttChart roles={[role]} year={minYear} countries={sorted} lang={lang} t={t} />
                 </div>
               </section>
             ))}
+            <section class="role-block" data-role-block="both" aria-labelledby="heading-both">
+              <h2 id="heading-both">{t.get("bothOffices")}</h2>
+              <Legend t={t} />
+              <div class="chart-scroll">
+                <GanttChart roles={roles} year={minYear} countries={sorted} lang={lang} t={t} />
+              </div>
+            </section>
 
             <section class="detail" aria-label={t.get("selectedTerm")} aria-live="polite" data-detail></section>
           </main>

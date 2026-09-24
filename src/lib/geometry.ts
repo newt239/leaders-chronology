@@ -6,6 +6,8 @@ export const layout = {
   barHeight: 24,
   barLabelPadding: 6,
   barLabelSize: 13,
+  bothLabelWidth: 230,
+  countryGap: 10,
   labelWidth: 140,
   minBarWidth: 3,
   plotWidth: 1000,
@@ -15,11 +17,11 @@ export const layout = {
 
 export type Scale = { from: number; to: number; xOf: (day: number) => number };
 
-export const createScale = (year: number, periodStart: string, asOf: string): Scale => {
+export const createScale = (year: number, periodStart: string, asOf: string, labelWidth = layout.labelWidth): Scale => {
   const from = Math.max(toDay(`${year}-01-01`), toDay(periodStart));
   const to = toDay(asOf);
   const ratio = layout.plotWidth / (to - from);
-  return { from, to, xOf: (day) => layout.labelWidth + (day - from) * ratio };
+  return { from, to, xOf: (day) => labelWidth + (day - from) * ratio };
 };
 
 export const barGeometry = (start: number, end: number, visibleFrom: number, scale: Scale) => {

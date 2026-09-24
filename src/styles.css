@@ -40,8 +40,11 @@ html {
 }
 
 html:not([data-js]) .filters,
-html[data-js]:not([data-office="government"]) [data-role-block="government"],
-html[data-office="government"] [data-role-block="state"] {
+html:not([data-js]) [data-role-block="both"],
+html[data-js]:not([data-office]) [data-role-block]:not([data-role-block="state"]),
+html[data-office="state"] [data-role-block]:not([data-role-block="state"]),
+html[data-office="government"] [data-role-block]:not([data-role-block="government"]),
+html[data-office="both"] [data-role-block]:not([data-role-block="both"]) {
   display: none;
 }
 
@@ -60,7 +63,7 @@ body {
     "Noto Serif JP", serif;
 }
 
-:lang(ja) :is(.page-header p, .chart .axis text, .chart .no-post) {
+:lang(ja) :is(.page-header p, .chart .axis text, .chart .no-post, .chart .lane-label) {
   font-style: normal;
 }
 
@@ -334,7 +337,8 @@ legend,
 }
 
 .chart .axis text,
-.chart .no-post {
+.chart .no-post,
+.chart .lane-label {
   fill: var(--muted);
   font-size: 14px;
   font-style: italic;

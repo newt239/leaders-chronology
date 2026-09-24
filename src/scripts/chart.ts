@@ -4,6 +4,7 @@ import { barGeometry, createScale, layout, ticks } from "#/lib/geometry.ts";
 import type { ClientData } from "#/types/leaders.ts";
 
 const SVG_NS = "http://www.w3.org/2000/svg";
+const OFFICES = ["state", "government", "both"];
 const NAV_KEYS = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight", "End", "Home"];
 
 const data: ClientData = JSON.parse(document.querySelector("#client-data")?.textContent ?? "{}");
@@ -60,7 +61,7 @@ const parseSince = (value: string | null) => {
 const readState = () => {
   const params = new URLSearchParams(location.search);
   return {
-    office: params.get("office") === "government" ? "government" : "state",
+    office: OFFICES.find((office) => office === params.get("office")) ?? "state",
     since: parseSince(params.get("since")),
   };
 };
@@ -239,10 +240,10 @@ const onKeydown = (event: KeyboardEvent) => {
 };
 
 const apply = () => {
-  const scale = createScale(state.since, data.periodStart, data.asOf);
   document.documentElement.dataset.office = state.office;
 
   document.querySelectorAll<SVGSVGElement>("svg.chart").forEach((chart) => {
+    const scale = createScale(state.since, data.periodStart, data.asOf, Number(chart.dataset.labelWidth));
     const top = Number(chart.dataset.plotTop);
     const bottom = Number(chart.dataset.plotBottom);
     chart.querySelector("[data-axis]")?.replaceChildren(
@@ -313,7 +314,7 @@ form?.addEventListener("submit", (event) => {
   event.preventDefault();
   const values = new FormData(form);
   state = {
-    office: values.get("office") === "government" ? "government" : "state",
+    office: OFFICES.find((office) => office === values.get("office")) ?? "state",
     since: parseSince(String(values.get("since"))),
   };
   const url = new URL(location.href);

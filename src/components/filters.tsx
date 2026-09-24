@@ -17,6 +17,10 @@ export const Filters = ({ roles, minYear, maxYear, t }: Props) => (
             {t.get(role === "head_of_state" ? "headOfState" : "headOfGovernment")}
           </label>
         ))}
+        <label class="choice">
+          <input type="radio" name="office" value="both" />
+          {t.get("both")}
+        </label>
       </fieldset>
       <div class="since">
         <label for="since">{t.get("since")}</label>
