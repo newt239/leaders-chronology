@@ -4,6 +4,8 @@ export const layout = {
   axisHeight: 32,
   barGap: 2,
   barHeight: 24,
+  barLabelPadding: 6,
+  barLabelSize: 13,
   labelWidth: 140,
   minBarWidth: 3,
   plotWidth: 1000,

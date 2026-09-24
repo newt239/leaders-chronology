@@ -87,26 +87,50 @@ export const GanttChart = ({ role, year, countries, lang, t }: Props) => {
                 data-founded={country.display_from}
               />
             )}
-            {bars.map((bar, i) => (
-              <rect
-                class={`bar tone-${bar.tone}`}
-                x={String(bar.geometry?.x ?? 0)}
-                y={String(y + barOffset)}
-                width={String(bar.geometry?.width ?? 0)}
-                height={layout.barHeight}
-                rx="2"
-                display={bar.geometry ? undefined : "none"}
-                role="button"
-                tabindex={i === first ? 0 : -1}
-                aria-label={t.get(bar.holder.acting ? "barLabelActing" : "barLabel", {
-                  country: countryName,
-                  end: bar.holder.end ? t.date(bar.holder.end) : t.get("present"),
-                  name: lang === "ja" ? bar.holder.name_ja : bar.holder.name_en,
-                  start: t.date(bar.holder.start),
-                })}
-                data-holder={bar.holder.id}
-              />
-            ))}
+            {bars.map((bar, i) => {
+              const name = lang === "ja" ? bar.holder.name_ja : bar.holder.name_en;
+              const estimate = [...name].reduce(
+                (sum, char) => sum + layout.barLabelSize * (char.charCodeAt(0) >= 0x3000 ? 1 : 0.56),
+                0,
+              );
+              const fits = bar.geometry !== null &&
+                estimate + layout.barLabelPadding * 2 <= bar.geometry.width;
+              return (
+                <>
+                  <rect
+                    class={`bar tone-${bar.tone}`}
+                    x={String(bar.geometry?.x ?? 0)}
+                    y={String(y + barOffset)}
+                    width={String(bar.geometry?.width ?? 0)}
+                    height={layout.barHeight}
+                    rx="2"
+                    display={bar.geometry ? undefined : "none"}
+                    role="button"
+                    tabindex={i === first ? 0 : -1}
+                    aria-label={t.get(bar.holder.acting ? "barLabelActing" : "barLabel", {
+                      country: countryName,
+                      end: bar.holder.end ? t.date(bar.holder.end) : t.get("present"),
+                      name,
+                      start: t.date(bar.holder.start),
+                    })}
+                    data-holder={bar.holder.id}
+                  />
+                  <text
+                    class={`bar-label label-${bar.tone}`}
+                    x={String((bar.geometry?.x ?? 0) + layout.barLabelPadding)}
+                    y={String(y + layout.rowHeight / 2)}
+                    dominant-baseline="central"
+                    display={bar.geometry ? undefined : "none"}
+                    visibility={fits ? undefined : "hidden"}
+                    aria-hidden="true"
+                    data-label-for={bar.holder.id}
+                    data-estimate={String(Math.round(estimate))}
+                  >
+                    {name}
+                  </text>
+                </>
+              );
+            })}
           </g>
         );
       })}

@@ -1,5 +1,5 @@
 import { toDay } from "#/lib/date.ts";
-import { barGeometry, createScale, ticks } from "#/lib/geometry.ts";
+import { barGeometry, createScale, layout, ticks } from "#/lib/geometry.ts";
 
 import type { ClientData } from "#/types/leaders.ts";
 
@@ -16,6 +16,41 @@ const minYear = Number(data.periodStart.slice(0, 4));
 const maxYear = Number(data.asOf.slice(0, 4)) - 1;
 const portraits = new Map<string, Promise<string | null>>();
 let detailRequest = 0;
+
+const tooltip = document.createElement("div");
+tooltip.className = "bar-tooltip";
+tooltip.hidden = true;
+tooltip.setAttribute("aria-hidden", "true");
+document.body.append(tooltip);
+
+let tooltipTimer: ReturnType<typeof setTimeout> | undefined;
+const hideTooltip = (delay = 0) => {
+  clearTimeout(tooltipTimer);
+  tooltipTimer = setTimeout(() => {
+    tooltip.hidden = true;
+  }, delay);
+};
+
+const labelOf = (bar: SVGRectElement) =>
+  bar.nextElementSibling instanceof SVGTextElement ? bar.nextElementSibling : null;
+
+const showTooltip = (bar: SVGRectElement) => {
+  clearTimeout(tooltipTimer);
+  const holder = data.holders[Number(bar.dataset.holder)];
+  if (!holder || labelOf(bar)?.getAttribute("visibility") !== "hidden") {
+    tooltip.hidden = true;
+    return;
+  }
+  tooltip.textContent = holder.name;
+  tooltip.hidden = false;
+  const rect = bar.getBoundingClientRect();
+  const left = Math.min(
+    Math.max(rect.left + rect.width / 2 - tooltip.offsetWidth / 2, 8),
+    innerWidth - tooltip.offsetWidth - 8,
+  );
+  tooltip.style.left = `${left}px`;
+  tooltip.style.top = `${Math.max(rect.top - tooltip.offsetHeight - 8, 8)}px`;
+};
 
 const parseSince = (value: string | null) => {
   const year = value && /^\d{4}$/.test(value) ? Number(value) : minYear;
@@ -243,6 +278,18 @@ const apply = () => {
         bar.setAttribute("display", geometry ? "inline" : "none");
         bar.setAttribute("x", String(geometry?.x ?? 0));
         bar.setAttribute("width", String(geometry?.width ?? 0));
+        const label = labelOf(bar);
+        if (label) {
+          label.setAttribute("display", geometry ? "inline" : "none");
+          label.setAttribute("x", String((geometry?.x ?? 0) + layout.barLabelPadding));
+          const measured = geometry ? label.getComputedTextLength() : 0;
+          if (measured > 0) {
+            label.dataset.estimate = String(measured);
+          }
+          const fits = geometry !== null &&
+            Number(label.dataset.estimate) + layout.barLabelPadding * 2 <= geometry.width;
+          label.setAttribute("visibility", fits ? "visible" : "hidden");
+        }
       });
       const visible = barsOf(row);
       const current = visible.find((bar) => bar.getAttribute("tabindex") === "0") ?? visible[0];
@@ -294,16 +341,50 @@ document.querySelectorAll<SVGSVGElement>("svg.chart").forEach((chart) => {
     if (!(event.target instanceof SVGRectElement) || !event.target.classList.contains("bar")) {
       return;
     }
+    tooltip.hidden = true;
     if (event.target.getAttribute("aria-current")) {
       clearDetail();
     } else {
       showDetail(event.target);
     }
   });
+  chart.addEventListener("pointerover", (event) => {
+    if (
+      event.pointerType !== "touch" && event.target instanceof SVGRectElement && event.target.classList.contains("bar")
+    ) {
+      showTooltip(event.target);
+    }
+  });
+  chart.addEventListener("pointerout", () => {
+    hideTooltip(300);
+  });
+  chart.addEventListener("focusin", (event) => {
+    if (event.target instanceof SVGRectElement && event.target.classList.contains("bar")) {
+      showTooltip(event.target);
+    }
+  });
+  chart.addEventListener("focusout", () => {
+    tooltip.hidden = true;
+  });
 });
 
+tooltip.addEventListener("pointerenter", () => {
+  clearTimeout(tooltipTimer);
+});
+tooltip.addEventListener("pointerleave", () => {
+  hideTooltip(300);
+});
+addEventListener("scroll", () => {
+  tooltip.hidden = true;
+}, { capture: true, passive: true });
+
 addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && detail?.hasChildNodes()) {
+  if (event.key !== "Escape") {
+    return;
+  }
+  if (!tooltip.hidden) {
+    tooltip.hidden = true;
+  } else if (detail?.hasChildNodes()) {
     clearDetail();
   }
 });

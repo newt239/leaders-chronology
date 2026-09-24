@@ -6,7 +6,8 @@
   --ink: #1a1a1a;
   --muted: #56534e;
   --grid: #dcd7cc;
-  --tone-b: #86817a;
+  --tone-b: #8a857e;
+  --on-tone-b: var(--ink);
   --accent: #9b2c2c;
 }
 
@@ -18,7 +19,8 @@
     --ink: #ece8e1;
     --muted: #b3aea5;
     --grid: #34312d;
-    --tone-b: #7b766e;
+    --tone-b: #8a857d;
+    --on-tone-b: var(--paper);
     --accent: #f0998e;
   }
 }
@@ -356,6 +358,32 @@ legend,
 
 .bar {
   cursor: pointer;
+}
+
+.bar-label {
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.chart .label-a,
+.chart .bar[aria-current="true"] + .bar-label {
+  fill: var(--paper);
+}
+
+.chart .label-b {
+  fill: var(--on-tone-b);
+}
+
+.bar-tooltip {
+  position: fixed;
+  z-index: 2;
+  max-width: 280px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
 .tone-a {
