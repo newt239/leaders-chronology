@@ -569,6 +569,10 @@ legend,
   margin: 0;
 }
 
+.page-footer .data-note {
+  flex-basis: 100%;
+}
+
 .social {
   display: flex;
   gap: 8px 20px;

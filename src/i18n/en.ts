@@ -6,6 +6,8 @@ export const en = {
   barLabelActing: "${country}, ${name}, acting, ${start} to ${end}",
   both: "Both",
   bothOffices: "Heads of State and Government",
+  dataNote:
+    "Data from [Wikidata](${wikidata}) and the [list of heads of state by the Ministry of Foreign Affairs of Japan](${mofa}). Report mistakes in [GitHub Issues](${issues}).",
   days: "${days} days",
   daysInOffice: "Days in office",
   daysSoFar: "${days} days so far",

@@ -1,3 +1,5 @@
+import { meta } from "#/lib/leaders.ts";
+
 import type { I18n } from "@libs/i18n";
 
 const links = [
@@ -7,6 +9,16 @@ const links = [
 
 export const SiteFooter = ({ t }: { t: I18n }) => (
   <footer class="page-footer">
+    <p
+      class="data-note"
+      dangerouslySetInnerHTML={{
+        __html: t.md("dataNote", {
+          issues: "https://github.com/newt239/leaders-chronology/issues",
+          mofa: meta.office_basis.url,
+          wikidata: "https://www.wikidata.org/",
+        }),
+      }}
+    />
     <p>© {new Date().getUTCFullYear()} newt</p>
     <ul class="social" aria-label={t.get("social")}>
       {links.map((link) => (

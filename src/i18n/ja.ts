@@ -8,6 +8,8 @@ export const ja: Messages = {
   barLabelActing: "${country} ${name}・代行、${start}から${end}まで",
   both: "両方",
   bothOffices: "元首と首相",
+  dataNote:
+    "データは[Wikidata](${wikidata})と[外務省「各国の元首名等一覧表」](${mofa})をもとにしています。誤りは[GitHubのIssue](${issues})でお知らせください。",
   days: "${days}日",
   daysInOffice: "在任日数",
   daysSoFar: "${days}日・在任中",
