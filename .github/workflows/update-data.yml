@@ -43,7 +43,7 @@ jobs:
           as_of=$(jq -r .meta.as_of data/leaders.json)
           body="$RUNNER_TEMP/body.md"
           {
-            echo "Leader data regenerated from Wikidata as of ${as_of}."
+            echo "New office holders from Wikidata as of ${as_of}. Check each change against the sources before merging."
             if [ "$(git show HEAD:data/leaders.json | jq -r .meta.as_of | cut -c1-4)" != "${as_of:0:4}" ]; then
               echo
               echo "The year changed. Regenerate the OG images in \`src/og/\`."
