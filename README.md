@@ -7,4 +7,5 @@ https://leaders-chronology.newt239.deno.net/
 ```sh
 deno task serve
 deno task build
+deno task update-data
 ```

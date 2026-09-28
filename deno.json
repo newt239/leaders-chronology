@@ -22,8 +22,9 @@
   "tasks": {
     "lume": "deno run --allow-read --allow-write --allow-env --allow-run --allow-ffi --allow-sys --allow-import=cdn.jsdelivr.net:443,jsr.io:443,deno.land:443,esm.sh:443 --allow-net=0.0.0.0,jsr.io:443,cdn.jsdelivr.net:443,data.jsdelivr.com:443,registry.npmjs.org:443 lume/cli.ts",
     "build": "deno task lume",
+    "update-data": "deno run --allow-net=query.wikidata.org:443 --allow-write=data/leaders.json scripts/update-leaders.ts",
     "serve": "deno task lume -s",
-    "typecheck": "deno check _config.ts src/",
+    "typecheck": "deno check _config.ts src/ scripts/",
     "lint": "deno lint",
     "format": "deno fmt --check",
     "format:fix": "deno fmt",

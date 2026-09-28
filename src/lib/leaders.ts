@@ -37,8 +37,8 @@ for (const country of source.countries) {
       if (prev && prev.start > holder.start) {
         errors.push(`${who}: start dates are not ascending`);
       }
-      if (holder.end === null && i !== office.holders.length - 1) {
-        errors.push(`${who}: only the last term may have end: null`);
+      if (holder.end === null && office.holders.slice(i + 1).some((later) => !later.acting)) {
+        errors.push(`${who}: only the last non-acting term may have end: null`);
       }
     });
   }
