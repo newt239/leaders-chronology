@@ -63,7 +63,7 @@ body {
     "Noto Serif JP", serif;
 }
 
-:lang(ja) :is(.page-header p, .chart .axis text, .chart .no-post, .chart .lane-label, .sources dt) {
+:lang(ja) :is(.page-header p, .chart .axis text, .chart .no-post, .lane-label, .sources dt) {
   font-style: normal;
 }
 
@@ -328,23 +328,46 @@ legend,
   justify-content: flex-end;
 }
 
+.chart-frame {
+  display: flex;
+  align-items: flex-start;
+}
+
 .chart-scroll {
+  flex: 1;
+  min-width: 0;
   overflow-x: auto;
 }
 
-.chart {
+.chart,
+.chart-labels {
   display: block;
+  flex: none;
   max-width: none;
   font-size: 15px;
 }
 
-.chart text {
+.chart-labels.chart-end {
+  display: none;
+}
+
+@media (min-width: 1464px) {
+  .chart-frame {
+    margin-inline: -140px;
+  }
+
+  .chart-labels.chart-end {
+    display: block;
+  }
+}
+
+:is(.chart, .chart-labels) text {
   fill: var(--ink);
 }
 
 .chart .axis text,
 .chart .no-post,
-.chart .lane-label {
+.lane-label {
   fill: var(--muted);
   font-size: 14px;
   font-style: italic;
@@ -355,7 +378,7 @@ legend,
   stroke-width: 1;
 }
 
-.row.is-active .row-label {
+.row-label.is-active {
   fill: var(--accent);
   font-weight: 700;
 }

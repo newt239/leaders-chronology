@@ -6,12 +6,12 @@ export const layout = {
   barHeight: 24,
   barLabelPadding: 6,
   barLabelSize: 13,
-  bothLabelWidth: 230,
+  contentWidth: 1168,
   countryGap: 10,
-  endLabelWidth: 140,
   labelWidth: 140,
+  laneLabelWidth: 56,
   minBarWidth: 3,
-  plotWidth: 1000,
+  plotPadding: 16,
   rowHeight: 36,
 };
 
@@ -22,12 +22,12 @@ export const createScale = (
   until: number,
   periodStart: string,
   asOf: string,
-  labelWidth = layout.labelWidth,
+  plotWidth: number,
 ): Scale => {
   const from = Math.max(toDay(`${since}-01-01`), toDay(periodStart));
   const to = Math.min(toDay(`${until + 1}-01-01`), toDay(asOf));
-  const ratio = layout.plotWidth / (to - from);
-  return { from, to, xOf: (day) => labelWidth + (day - from) * ratio };
+  const ratio = plotWidth / (to - from);
+  return { from, to, xOf: (day) => layout.plotPadding + (day - from) * ratio };
 };
 
 export const barGeometry = (start: number, end: number, visibleFrom: number, scale: Scale) => {

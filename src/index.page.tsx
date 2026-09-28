@@ -121,23 +121,19 @@ const Page = ({ lang }: { lang: Lang }) => {
                 <h2 id={`heading-${role}`}>
                   {t.get(role === "head_of_state" ? "headOfState" : "headOfGovernment")}
                 </h2>
-                <div class="chart-scroll">
-                  <GanttChart
-                    roles={[role]}
-                    since={defaultSince}
-                    until={endYear}
-                    countries={sorted}
-                    lang={lang}
-                    t={t}
-                  />
-                </div>
+                <GanttChart
+                  roles={[role]}
+                  since={defaultSince}
+                  until={endYear}
+                  countries={sorted}
+                  lang={lang}
+                  t={t}
+                />
               </section>
             ))}
             <section class="role-block" data-role-block="both" aria-labelledby="heading-both">
               <h2 id="heading-both">{t.get("bothOffices")}</h2>
-              <div class="chart-scroll">
-                <GanttChart roles={roles} since={defaultSince} until={endYear} countries={sorted} lang={lang} t={t} />
-              </div>
+              <GanttChart roles={roles} since={defaultSince} until={endYear} countries={sorted} lang={lang} t={t} />
             </section>
 
             <section class="detail" aria-label={t.get("selectedTerm")} aria-live="polite" data-detail></section>

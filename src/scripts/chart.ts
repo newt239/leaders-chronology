@@ -103,7 +103,7 @@ const clearDetail = () => {
   const current = document.querySelector<SVGRectElement>(".bar[aria-current]");
   const hadFocus = detail?.contains(document.activeElement) ?? false;
   current?.removeAttribute("aria-current");
-  document.querySelectorAll(".row.is-active").forEach((el) => el.classList.remove("is-active"));
+  document.querySelectorAll(".row-label.is-active").forEach((el) => el.classList.remove("is-active"));
   detail?.replaceChildren();
   document.documentElement.style.removeProperty("--detail-height");
   detailRequest++;
@@ -120,11 +120,10 @@ const showDetail = (bar: SVGRectElement, focusNav?: "previous" | "next") => {
     return;
   }
   document.querySelectorAll(".bar[aria-current]").forEach((el) => el.removeAttribute("aria-current"));
-  document.querySelectorAll(".row.is-active").forEach((el) => el.classList.remove("is-active"));
+  document.querySelectorAll(".row-label.is-active").forEach((el) => el.classList.remove("is-active"));
   bar.setAttribute("aria-current", "true");
-  bar.closest("svg")?.querySelectorAll(`.row[data-country="${row.getAttribute("data-country")}"]`).forEach((lane) =>
-    lane.classList.add("is-active")
-  );
+  bar.closest(".chart-frame")?.querySelectorAll(`.row-label[data-country="${row.getAttribute("data-country")}"]`)
+    .forEach((label) => label.classList.add("is-active"));
 
   const request = ++detailRequest;
   const fields: [string, string][] = [
@@ -263,7 +262,7 @@ const apply = () => {
   document.documentElement.dataset.office = state.office;
 
   document.querySelectorAll<SVGSVGElement>("svg.chart").forEach((chart) => {
-    const scale = createScale(state.since, state.until, data.periodStart, data.asOf, Number(chart.dataset.labelWidth));
+    const scale = createScale(state.since, state.until, data.periodStart, data.asOf, Number(chart.dataset.plotWidth));
     const top = Number(chart.dataset.plotTop);
     const bottom = Number(chart.dataset.plotBottom);
     chart.querySelector("[data-axis]")?.replaceChildren(
