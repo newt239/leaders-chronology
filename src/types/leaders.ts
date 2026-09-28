@@ -27,6 +27,8 @@ export type Country = {
   id: string;
   name_en: string;
   name_ja: string;
+  short_en: string;
+  short_ja: string;
   name_kana: string;
   display_from: string;
   offices: Office[];

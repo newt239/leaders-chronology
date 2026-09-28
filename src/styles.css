@@ -347,7 +347,8 @@ legend,
   font-size: 15px;
 }
 
-.chart-labels.chart-end {
+.chart-labels.chart-end,
+.name-short {
   display: none;
 }
 
@@ -638,6 +639,22 @@ legend,
 @media (max-width: 600px) {
   h1 {
     font-size: 2rem;
+  }
+
+  .chart-names {
+    width: 100px;
+  }
+
+  .chart-lanes {
+    width: 44px;
+  }
+
+  .name-long {
+    display: none;
+  }
+
+  .name-short {
+    display: inline;
   }
 
   .detail {

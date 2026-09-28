@@ -31,6 +31,7 @@ export const GanttChart = ({ roles, since, until, countries, lang, t }: Props) =
   const height = plotBottom + 8;
   const roleName = (role: Role) => t.get(role === "head_of_state" ? "headOfState" : "headOfGovernment");
   const countryName = (country: Country) => lang === "ja" ? country.name_ja : country.name_en;
+  const shortName = (country: Country) => lang === "ja" ? country.short_ja : country.short_en;
   const countryLabel = (group: (typeof groups)[number], name: string, className: string, anchor: "start" | "end") => (
     <text
       class={className}
@@ -48,7 +49,16 @@ export const GanttChart = ({ roles, since, until, countries, lang, t }: Props) =
   return (
     <div class="chart-frame">
       <svg class="chart-labels chart-names" width={String(nameWidth)} height={String(height)} aria-hidden="true">
-        {groups.map((group) => countryLabel(group, countryName(group.country), "row-label", "end"))}
+        {groups.map((group) =>
+          shortName(group.country) === countryName(group.country)
+            ? countryLabel(group, countryName(group.country), "row-label", "end")
+            : (
+              <>
+                {countryLabel(group, countryName(group.country), "row-label name-long", "end")}
+                {countryLabel(group, shortName(group.country), "row-label name-short", "end")}
+              </>
+            )
+        )}
       </svg>
       {both && (
         <svg

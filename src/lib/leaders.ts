@@ -56,6 +56,8 @@ export const countries: Country[] = source.countries.map((country) => ({
   name_en: country.name_en,
   name_ja: country.name_ja,
   name_kana: country.name_kana,
+  short_en: country.short_en,
+  short_ja: country.short_ja,
   offices: country.offices.flatMap((office) =>
     isRole(office.role)
       ? [{
