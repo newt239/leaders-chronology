@@ -69,8 +69,10 @@ export const countries: Country[] = source.countries.map((country) => ({
           wikipedia: holder.wikipedia,
         })),
         role: office.role,
+        sources: office.sources,
         title_en: office.title_en,
         title_ja: office.title_ja,
+        wikidata: office.wikidata,
       }]
       : []
   ),

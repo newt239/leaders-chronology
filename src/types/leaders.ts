@@ -12,10 +12,14 @@ export type Holder = {
   wikipedia: { en: string | null; ja: string | null };
 };
 
+export type Source = { title: string; url: string };
+
 export type Office = {
   role: Role;
   title_en: string;
   title_ja: string;
+  wikidata: string[];
+  sources: Source[];
   holders: Holder[];
 };
 
