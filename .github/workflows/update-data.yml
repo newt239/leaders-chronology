@@ -1,0 +1,69 @@
+name: Update data
+
+on:
+  schedule:
+    - cron: "0 0 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  update-data:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    env:
+      BRANCH: data-update
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Deno
+        uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version-file: .tool-versions
+          cache: true
+      - name: Install dependencies
+        run: deno install --frozen
+      - name: Update data
+        run: deno task update-data 2> "$RUNNER_TEMP/warnings.txt"
+      - name: Build
+        run: deno task build
+      - name: Open pull request
+        run: |
+          if git diff --quiet -- data/leaders.json; then
+            echo "No changes"
+            exit 0
+          fi
+          as_of=$(jq -r .meta.as_of data/leaders.json)
+          body="$RUNNER_TEMP/body.md"
+          {
+            echo "Leader data regenerated from Wikidata as of ${as_of}."
+            if [ "$(git show HEAD:data/leaders.json | jq -r .meta.as_of | cut -c1-4)" != "${as_of:0:4}" ]; then
+              echo
+              echo "The year changed. Regenerate the OG images in \`src/og/\`."
+            fi
+            echo
+            echo "<details><summary>Warnings ($(wc -l < "$RUNNER_TEMP/warnings.txt"))</summary>"
+            echo
+            echo '```'
+            head -c 60000 "$RUNNER_TEMP/warnings.txt"
+            echo '```'
+            echo
+            echo "</details>"
+          } > "$body"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git commit -am "chore: update leader data as of ${as_of}"
+          git push --force origin "$BRANCH"
+          if [ -n "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
+            gh pr edit "$BRANCH" --title "chore: update leader data as of ${as_of}" --body-file "$body"
+          else
+            gh pr create --head "$BRANCH" --title "chore: update leader data as of ${as_of}" --body-file "$body"
+          fi
