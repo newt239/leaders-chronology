@@ -1,13 +1,15 @@
 export const en = {
   acting: "Acting",
+  allCountries: "All countries",
   apply: "Apply",
   asOf: "As of ${date}",
+  backToChart: "Back to the chronology",
   barLabel: "${country}, ${name}, ${start} to ${end}",
   barLabelActing: "${country}, ${name}, acting, ${start} to ${end}",
   both: "Both",
   bothOffices: "Heads of State and Government",
   dataNote:
-    "Data from [Wikidata](${wikidata}) and the [list of heads of state by the Ministry of Foreign Affairs of Japan](${mofa}). Report mistakes in [GitHub Issues](${issues}).",
+    "Data from Wikipedia, [Wikidata](${wikidata}) and the [list of heads of state by the Ministry of Foreign Affairs of Japan](${mofa}). See [sources](${sources}) for each office. Report mistakes in [GitHub Issues](${issues}).",
   days: "${days} days",
   daysInOffice: "Days in office",
   daysSoFar: "${days} days so far",
@@ -29,6 +31,8 @@ export const en = {
   selected: "Selected",
   selectedTerm: "Selected term",
   since: "Since",
+  sources: "Sources",
+  sourcesDescription: "Sources for the terms of heads of state and government.",
   social: "Links",
   stateShort: "State",
   status: "Status",
@@ -37,6 +41,7 @@ export const en = {
   termRange: "${start} – ${end}",
   title: "Leaders Chronology",
   until: "Until",
+  wikidataItem: "Wikidata ${id}",
 };
 
 export type Messages = Record<keyof typeof en, string>;

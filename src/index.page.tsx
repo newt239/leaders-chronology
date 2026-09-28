@@ -4,7 +4,7 @@ import { Legend } from "#/components/legend.tsx";
 import { SiteFooter } from "#/components/site-footer.tsx";
 import { toDay } from "#/lib/date.ts";
 import { languages, translator } from "#/lib/i18n.ts";
-import { countries, meta, roleParam } from "#/lib/leaders.ts";
+import { countries, meta, roleParam, sortedCountries } from "#/lib/leaders.ts";
 
 import type { ClientData, Lang, Role } from "#/types/leaders.ts";
 
@@ -20,9 +20,7 @@ const Page = ({ lang }: { lang: Lang }) => {
   const t = translator(lang);
   const other: Lang = lang === "en" ? "ja" : "en";
   const description = t.get("description", { date: t.date(meta.period_start) });
-  const sorted = countries.toSorted((a, b) =>
-    lang === "ja" ? a.name_kana.localeCompare(b.name_kana, "ja") : a.name_en.localeCompare(b.name_en, "en")
-  );
+  const sorted = sortedCountries(lang);
   const clientData: ClientData = {
     asOf: meta.as_of,
     defaultSince,
@@ -145,7 +143,7 @@ const Page = ({ lang }: { lang: Lang }) => {
             <section class="detail" aria-label={t.get("selectedTerm")} aria-live="polite" data-detail></section>
           </main>
 
-          <SiteFooter t={t} />
+          <SiteFooter lang={lang} t={t} />
 
           <script
             type="application/json"

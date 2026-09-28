@@ -2,14 +2,16 @@ import type { Messages } from "#/i18n/en.ts";
 
 export const ja: Messages = {
   acting: "代行・暫定",
+  allCountries: "全体",
   apply: "適用",
   asOf: "${date}時点",
+  backToChart: "年表に戻る",
   barLabel: "${country} ${name}、${start}から${end}まで",
   barLabelActing: "${country} ${name}・代行、${start}から${end}まで",
   both: "両方",
   bothOffices: "元首と首相",
   dataNote:
-    "データは[Wikidata](${wikidata})と[外務省「各国の元首名等一覧表」](${mofa})をもとにしています。誤りは[GitHubのIssue](${issues})でお知らせください。",
+    "データはWikipedia、[Wikidata](${wikidata})、[外務省「各国の元首名等一覧表」](${mofa})をもとにしています。職ごとの[出典](${sources})もご覧ください。誤りは[GitHubのIssue](${issues})でお知らせください。",
   days: "${days}日",
   daysInOffice: "在任日数",
   daysSoFar: "${days}日・在任中",
@@ -31,6 +33,8 @@ export const ja: Messages = {
   selected: "選択中",
   selectedTerm: "選択中の任期",
   since: "開始年",
+  sources: "出典",
+  sourcesDescription: "各国の元首と首相の在任期間の出典。",
   social: "リンク",
   stateShort: "元首",
   status: "区分",
@@ -39,4 +43,5 @@ export const ja: Messages = {
   termRange: "${start}〜${end}",
   title: "首脳在任年表",
   until: "終了年",
+  wikidataItem: "Wikidata ${id}",
 };

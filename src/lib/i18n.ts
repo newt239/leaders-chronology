@@ -7,9 +7,9 @@ import type { Lang } from "#/types/leaders.ts";
 i18n.for("en").set(en);
 i18n.for("ja").set(ja);
 
-export const languages: Record<Lang, { path: string; name: string }> = {
-  en: { name: "English", path: "/" },
-  ja: { name: "日本語", path: "/ja/" },
+export const languages: Record<Lang, { path: string; name: string; sources: string }> = {
+  en: { name: "English", path: "/", sources: "/sources/" },
+  ja: { name: "日本語", path: "/ja/", sources: "/ja/sources/" },
 };
 
 export const translator = (lang: Lang) => i18n.for(lang, { timezone: "UTC" });

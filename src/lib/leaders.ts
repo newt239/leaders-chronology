@@ -1,7 +1,7 @@
 import source from "../../data/leaders.json" with { type: "json" };
 import { isIsoDate } from "#/lib/date.ts";
 
-import type { Country, Role } from "#/types/leaders.ts";
+import type { Country, Lang, Role } from "#/types/leaders.ts";
 
 const isRole = (role: string): role is Role => role === "head_of_state" || role === "head_of_government";
 
@@ -77,6 +77,11 @@ export const countries: Country[] = source.countries.map((country) => ({
       : []
   ),
 }));
+
+export const sortedCountries = (lang: Lang) =>
+  countries.toSorted((a, b) =>
+    lang === "ja" ? a.name_kana.localeCompare(b.name_kana, "ja") : a.name_en.localeCompare(b.name_en, "en")
+  );
 
 export const roleParam: Record<Role, string> = {
   head_of_government: "government",

@@ -63,7 +63,7 @@ body {
     "Noto Serif JP", serif;
 }
 
-:lang(ja) :is(.page-header p, .chart .axis text, .chart .no-post, .chart .lane-label) {
+:lang(ja) :is(.page-header p, .chart .axis text, .chart .no-post, .chart .lane-label, .sources dt) {
   font-style: normal;
 }
 
@@ -551,6 +551,30 @@ legend,
   flex-basis: 100%;
   justify-content: space-between;
   gap: 12px;
+}
+
+.sources ul {
+  margin: 0;
+  padding-left: 1.25em;
+}
+
+.sources li a {
+  display: inline-block;
+  min-height: 24px;
+}
+
+.sources dl {
+  margin: 0;
+}
+
+.sources dt {
+  margin-top: 12px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.sources dd {
+  margin: 4px 0 0;
 }
 
 .page-footer {
